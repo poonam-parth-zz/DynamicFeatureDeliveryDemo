@@ -1,14 +1,15 @@
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
+plugins {
+    id 'com.android.dynamic-feature'
+    id 'kotlin-android'
+}
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.dynamicfeaturedeliverydemo"
+        applicationId "com.example.dynamicfeature"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -18,35 +19,23 @@ android {
     }
 
     buildTypes {
-        debug {
-        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-    kotlinOptions {
-        jvmTarget = '1.8'
-    }
-    dynamicFeatures = [':dynamicfeature']
 }
 
 dependencies {
-
-    implementation project(":normalmodule")
-
+    implementation project(":app")
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation 'androidx.core:core-ktx:1.2.0'
     implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
 
     implementation 'com.google.dagger:dagger-android:2.24'
     implementation 'com.google.dagger:dagger-android-support:2.24' // if you use the support libraries
@@ -54,6 +43,5 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.24'
 
     implementation "com.jakewharton.timber:timber:4.7.1"
-
     implementation "com.google.android.play:core-ktx:1.8.0"
 }

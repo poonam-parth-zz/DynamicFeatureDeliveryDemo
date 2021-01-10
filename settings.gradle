@@ -1,2 +1,4 @@
+include ':normalmodule'
+include ':dynamicfeature'
 include ':app'
 rootProject.name = "DynamicFeatureDeliveryDemo"
