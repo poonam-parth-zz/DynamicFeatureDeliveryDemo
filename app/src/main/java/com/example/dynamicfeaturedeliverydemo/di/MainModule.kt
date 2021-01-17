@@ -6,6 +6,8 @@ import com.example.dynamicfeaturedeliverydemo.MainActivity
 import com.example.normalmodule.NormalActivity
 import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallManagerFactory
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManager
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManagerFactory
 import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
@@ -29,20 +31,20 @@ abstract class MainModule {
         fun applicationContext(app: Application): Context = app
 
 
-        @Singleton
-        @JvmStatic
-        @Provides
-        fun splitInstallManager(context: Context): SplitInstallManager =
-            SplitInstallManagerFactory.create(context)
-
-        // Only for local testing purpose
+//        @Singleton
 //        @JvmStatic
 //        @Provides
-//        fun splitInstallManager(context: Context): FakeSplitInstallManager =
-//            FakeSplitInstallManagerFactory.create(
-//                context,
-//                context.getExternalFilesDir("local_testing")
-//            )
+//        fun splitInstallManager(context: Context): SplitInstallManager =
+//            SplitInstallManagerFactory.create(context)
+
+        // Only for local testing purpose
+        @JvmStatic
+        @Provides
+        fun splitInstallManager(context: Context): FakeSplitInstallManager =
+            FakeSplitInstallManagerFactory.create(
+                context,
+                context.getExternalFilesDir("local_testing")
+            )
 
 
     }

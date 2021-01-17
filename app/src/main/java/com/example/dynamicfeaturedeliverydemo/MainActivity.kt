@@ -5,11 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.normalmodule.NormalActivity
-import com.google.android.play.core.splitinstall.SplitInstallManager
 import com.google.android.play.core.splitinstall.SplitInstallRequest
 import com.google.android.play.core.splitinstall.SplitInstallSessionState
 import com.google.android.play.core.splitinstall.SplitInstallStateUpdatedListener
 import com.google.android.play.core.splitinstall.model.SplitInstallSessionStatus
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManager
 import dagger.android.AndroidInjection
 import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
@@ -17,8 +17,12 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
 
+//    @Inject
+//    lateinit var splitInstallManager: SplitInstallManager
+
+    // for local testing
     @Inject
-    lateinit var splitInstallManager: SplitInstallManager
+    lateinit var splitInstallManager: FakeSplitInstallManager
 
     private var sessionId = 0
 
@@ -91,6 +95,16 @@ class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
             }
         }
 
+    }
+
+    override fun onResume() {
+        splitInstallManager.registerListener(this)
+        super.onResume()
+    }
+
+    override fun onPause() {
+        splitInstallManager.unregisterListener(this)
+        super.onPause()
     }
 
 
