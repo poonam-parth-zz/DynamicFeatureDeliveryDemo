@@ -2,6 +2,7 @@ package com.example.dynamicfeaturedeliverydemo.di
 
 import android.app.Application
 import com.example.dynamicfeaturedeliverydemo.MainApplication
+import com.google.android.play.core.splitinstall.testing.FakeSplitInstallManager
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjectionModule
@@ -12,6 +13,8 @@ import javax.inject.Singleton
 @Component(modules = [MainModule::class,  AndroidInjectionModule::class,
     AndroidSupportInjectionModule::class])
 interface MainComponent {
+
+    fun splitInstallManager() : FakeSplitInstallManager
 
     fun inject(app: MainApplication)
 

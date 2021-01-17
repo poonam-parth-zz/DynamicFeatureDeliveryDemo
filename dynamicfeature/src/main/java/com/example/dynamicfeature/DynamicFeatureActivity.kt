@@ -12,6 +12,9 @@ import javax.inject.Inject
 class DynamicFeatureActivity : AppCompatActivity() {
 
     @Inject
+    lateinit var splitInstallManager: FakeSplitInstallManager
+
+    @Inject
     lateinit var dynamicFeatureRepo: DynamicFeatureRepo
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,6 +25,8 @@ class DynamicFeatureActivity : AppCompatActivity() {
         setContentView(R.layout.activity_dynamic_feature)
 
         tvMain.text = dynamicFeatureRepo.provideRandomString()
+
+        splitInstallManager.installedModules
     }
 
     private fun initDependencyInjection() =
