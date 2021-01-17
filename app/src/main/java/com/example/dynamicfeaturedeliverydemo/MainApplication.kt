@@ -1,6 +1,6 @@
 package com.example.dynamicfeaturedeliverydemo
 
-import com.example.dynamicfeaturedeliverydemo.di.DaggerMainActivityComponent
+import com.example.dynamicfeaturedeliverydemo.di.DaggerMainComponent
 import com.example.dynamicfeaturedeliverydemo.di.MainComponent
 import com.google.android.play.core.splitcompat.SplitCompatApplication
 import dagger.android.AndroidInjector
@@ -29,7 +29,7 @@ class MainApplication : SplitCompatApplication(),CoreComponentProvider, HasAndro
     }
 
     private fun setupDependencyInjection() {
-        appComponent = DaggerMainActivityComponent
+        appComponent = DaggerMainComponent
             .builder()
             .app(this)
             .build()

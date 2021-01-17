@@ -2,7 +2,6 @@ package com.example.normalmodule
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.dynamicfeaturedeliverydemo.extensions.coreComponent
 import dagger.android.AndroidInjection
 
 class NormalActivity : AppCompatActivity() {

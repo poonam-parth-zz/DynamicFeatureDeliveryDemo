@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
 
     @Inject
     lateinit var splitInstallManager: SplitInstallManager
@@ -49,45 +49,48 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
-        val listener =
-            SplitInstallStateUpdatedListener { state: SplitInstallSessionState ->
-                if (state.status() == SplitInstallSessionStatus.FAILED
-                ) {
-                    return@SplitInstallStateUpdatedListener
-                }
-                if (state.sessionId() == sessionId) {
-                    when (state.status()) {
-                        SplitInstallSessionStatus.DOWNLOADING -> {
-                            Toast.makeText(this,"Downloading...",Toast.LENGTH_SHORT).show()
-                            Timber.i("DFM :  DOWNLOADING")
-                        }
-
-                        SplitInstallSessionStatus.DOWNLOADED -> {
-                            Timber.i("DFM : DOWNLOADED")
-                        }
-                        SplitInstallSessionStatus.INSTALLED -> {
-                            Toast.makeText(this,"Installed",Toast.LENGTH_SHORT).show()
-
-                            startActivity(
-                                Intent(
-                                    this,
-                                    Class.forName("com.example.dynamicfeature.DynamicFeatureActivity")
-                                )
-                            )
-                        }
-                    }
-                }
-            }
-
-        splitInstallManager.registerListener(listener)
-
+        splitInstallManager.registerListener(this)
         splitInstallManager.startInstall(
             SplitInstallRequest.newBuilder().addModule("dynamicfeature").build()
         )
             .addOnSuccessListener {
+                Timber.i("DFM : addOnSuccessListener $it")
                 sessionId = it
             }
             .addOnFailureListener { ex -> Timber.i("DFM : addOnFailureListener $ex") }
+
+
+    }
+
+    override fun onStateUpdate(state: SplitInstallSessionState) {
+        if (state.status() == SplitInstallSessionStatus.FAILED
+        ) {
+            return
+        }
+        if (state.sessionId() == sessionId) {
+            when (state.status()) {
+                SplitInstallSessionStatus.DOWNLOADING -> {
+                    Toast.makeText(this, "Downloading...", Toast.LENGTH_SHORT).show()
+                    Timber.i("DFM :  DOWNLOADING")
+                }
+
+                SplitInstallSessionStatus.DOWNLOADED -> {
+                    Timber.i("DFM : DOWNLOADED")
+                }
+                SplitInstallSessionStatus.INSTALLED -> {
+                    Timber.i("DFM : Installed")
+                    Toast.makeText(this, "Installed", Toast.LENGTH_SHORT).show()
+
+                    startActivity(
+                        Intent(
+                            this,
+                            Class.forName("com.example.dynamicfeature.DynamicFeatureActivity")
+                        )
+                    )
+                }
+            }
+        }
+
     }
 
 
