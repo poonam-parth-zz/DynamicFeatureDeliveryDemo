@@ -1,6 +1,8 @@
 package com.example.dynamicfeaturedeliverydemo
 
+import android.app.Activity
 import android.content.Intent
+import android.content.IntentSender.SendIntentException
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,8 +17,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import timber.log.Timber
 import javax.inject.Inject
 
+
 class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
 
+    private val REQUEST_CODE = 101
 //    @Inject
 //    lateinit var splitInstallManager: SplitInstallManager
 
@@ -73,6 +77,17 @@ class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
         }
         if (state.sessionId() == sessionId) {
             when (state.status()) {
+                SplitInstallSessionStatus.REQUIRES_USER_CONFIRMATION -> {
+                    try {
+                        splitInstallManager.startConfirmationDialogForResult(
+                            state,
+                            this@MainActivity, REQUEST_CODE
+                        )
+                    } catch (ex: SendIntentException) {
+                        Timber.i("DFM : Confirmation Request Failed.")
+                    }
+
+                }
                 SplitInstallSessionStatus.DOWNLOADING -> {
                     Toast.makeText(this, "Downloading...", Toast.LENGTH_SHORT).show()
                     Timber.i("DFM :  DOWNLOADING")
@@ -105,6 +120,17 @@ class MainActivity : AppCompatActivity(), SplitInstallStateUpdatedListener {
     override fun onPause() {
         splitInstallManager.unregisterListener(this)
         super.onPause()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                Timber.i("DFM : Beginning Installation.")
+            } else {
+                Timber.i("DFM : User declined installation..")
+            }
+        }
     }
 
 
